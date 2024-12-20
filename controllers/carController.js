@@ -41,14 +41,26 @@ export const getCarById = async (req, res) => {
 }
 
 export const updateCarByID = async (req, res) => {
-    const { id } = req.params;
+  const { id } = req.params;
+
+  // Vérifie si l'ID est un ObjectId valide
+  if (!id.match(/^[0-9a-fA-F]{24}$/)) {
+    return res.status(400).json({ message: "Invalid car ID 🔴" });
+  }
+
   try {
-    const updateCar = await Voiture.findByIdAndUpdate(id, req.body, { new: true });
+    const updateCar = await Voiture.findByIdAndUpdate(id, req.body, { new: true, runValidators: true });
+
+    if (!updateCar) {
+      return res.status(404).json({ message: "Car not found 🔴" });
+    }
+
     return res.status(200).json(updateCar);
   } catch (error) {
+    console.error("Error updating car:", error);
     return res.status(500).json({ message: "Internal server error 🔴" });
   }
-}
+};
 
 export const deleteCarByID = async (req, res) => {
     const { id } = req.params;
