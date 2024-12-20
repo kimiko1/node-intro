@@ -49,7 +49,7 @@ export const updateCarByID = async (req, res) => {
   }
 
   try {
-    const updateCar = await Voiture.findByIdAndUpdate(id, req.body, { new: true, runValidators: true });
+    const updateCar = await Car.findByIdAndUpdate(id, req.body, { new: true, runValidators: true });
 
     if (!updateCar) {
       return res.status(404).json({ message: "Car not found 🔴" });
